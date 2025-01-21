@@ -6,6 +6,13 @@ const metadata = {
   title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
   ignoreTitleTemplate: true,
 };
+
+const isAuth = Boolean(Astro.cookies.get('auth')?.value ?? false);
+
+const layout = await fetch('https://noisy-shape-3bdf.slim-r35.workers.dev/').then((res) => res.json());
+const content = await fetch('https://winter-rain-5cb8.slim-r35.workers.dev/', {
+  headers: { ...(isAuth && { 'x-auth': 'true' }) },
+}).then((res) => res.json());
 ---
 
 <Layout metadata={metadata}>
@@ -14,33 +21,13 @@ const metadata = {
   <Hero
     actions={[
       {
-        variant: 'primary',
-        text: 'Get template',
-        href: 'https://github.com/onwidget/astrowind',
-        target: '_blank',
-        icon: 'tabler:download',
+        text: 'Sign In',
+        href: '#features',
+        onclick: `document.cookie = "auth=true; max-age=10; path=/"; location.reload();`,
       },
-      { text: 'Learn more', href: '#features' },
     ]}
-    image={{
-      src: '~/assets/images/hero-image.png',
-      alt: 'AstroWind Hero Image',
-      class: 'mx-auto rounded-md w-full',
-    }}
-  >
-    <Fragment slot='title'>
-      Welcome to
-      <span class='dark:text-white highlight bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent'>
-        INVITE EPAM</span
-      > Referral Program
-    </Fragment>
-
-    <Fragment slot='subtitle'>
-      <span class='hidden sm:inline'>
-        Join us in shaping the future at EPAM! Our Referral Program is the perfect opportunity to bring brilliant minds
-        into our supportive and thriving community. At EPAM, we believe that our people are the foundation of our
-        success and growth, and we're excited to invite you to help us find exceptional talent.
-      </span>
-    </Fragment>
-  </Hero>
+    image={content['ern:content:image'].properties}
+    layout={layout}
+    content={content}
+  />
 </Layout>
