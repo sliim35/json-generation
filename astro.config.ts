@@ -10,6 +10,7 @@ import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 import astrowind from './vendor/integration';
 
@@ -88,6 +89,16 @@ export default defineConfig({
         '~': path.resolve(__dirname, './src'),
       },
     },
+    plugins: [
+      viteStaticCopy({
+        targets: [
+          {
+            src: 'functions',
+            dest: '',
+          },
+        ],
+      }),
+    ],
   },
 
   adapter: cloudflare(),
